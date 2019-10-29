@@ -19,7 +19,7 @@ class LoggingEventHandler(FileSystemEventHandler):
 
         what = 'directory' if event.is_directory else 'file'
         total_lines = self.analyze_file(src_path=event.src_path)
-        logging.info("Created %s: %s", total_lines, event.src_path)
+        logging.info("Created : %s", event.src_path)
 
     def on_deleted(self, event):
         super(LoggingEventHandler, self).on_deleted(event)
@@ -37,5 +37,12 @@ class LoggingEventHandler(FileSystemEventHandler):
         full_path = Path(src_path).absolute()
         with open(full_path) as read_file:
             lines = read_file.readlines()
-            print(lines)
+            line_number = 0
+            for line in lines:
+                line_number  = line_number + 1
+                trailing_char = line[-2]
+                print(line.count())
+                if not trailing_char == ";":
+                    logging.info("Line %d: %s", line_number, "missing trailing char \";\" at the end")
         return lines
+
