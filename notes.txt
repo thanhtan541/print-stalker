@@ -1,0 +1,13 @@
+Interface
+- ErrorInterface: getError
+- RuleInterface
+ConcreteClass
+- ErrorConcrete: implement ErrorInterface
+-- Missing trailing symbom ";"
+-- Missing pair colon in static call
+-- Missing bracket
+-- Missing curly bracket
+-- Missing square bracket
+-- Undefined variable
+-- Un-released variable
+-- 

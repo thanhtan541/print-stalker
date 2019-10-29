@@ -4,3 +4,4 @@
 
 #include "path/to/some_file"
 #include "path/to/some_file"
+result = string::getlist()
