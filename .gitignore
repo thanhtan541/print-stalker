@@ -3,4 +3,5 @@
 .idea
 stalker.egg-info/
 *.swp
+/tmp/*
 
