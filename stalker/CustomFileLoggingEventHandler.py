@@ -1,5 +1,6 @@
 from pathlib import Path
 from .Utils import *
+from .ErrorHandlers import *
 
 from watchdog.events import FileSystemEventHandler
 
@@ -11,10 +12,8 @@ def analyze_file(src_path):
         line_number = 0
         for line in lines:
             line_number = line_number + 1
-            if len(line) > 1:
-                trailing_char = line[-2]
-
-            check_static_call = line.find(":")
+            if EndOfLineError.check(line=line):
+                LoggingCustom.log_alert(line=line_number,msg=EndOfLineError.msg)
     return lines
 
 

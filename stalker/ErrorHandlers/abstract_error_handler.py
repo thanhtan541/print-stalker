@@ -1,4 +1,5 @@
-from abc import ABC, abstractmethod
+from abc import ABC, abstractstaticmethod
+import re
 
 
 class AbstractErrorHandler(ABC):
@@ -10,14 +11,33 @@ class AbstractErrorHandler(ABC):
     def error_code(self) -> int:
         ...
 
-    @abstractmethod
-    def condition(self) -> bool:
-        pass
+    @property
+    def pattern(self) -> str:
+        ...
 
-    @abstractmethod
+    @property.getter
+    def pattern(self) -> str:
+        ...
+
+    @property
+    def exception(self) -> str:
+        ...
+
+    @property.getter
+    def exception(self) -> str:
+        ...
+
+    @property
     def msg(self) -> str:
-        pass
+        ...
 
-    @abstractmethod
-    def exception(self) -> bool:
-        pass
+    @property.getter
+    def msg(self) -> str:
+        ...
+
+    def check(self, line: str) -> bool:
+        exception = re.search(self.exception, line)
+        if exception is not None:
+            return False
+        check = re.search(self.pattern, line)
+        return False if check is None else True
