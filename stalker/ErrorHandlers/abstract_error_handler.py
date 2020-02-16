@@ -1,13 +1,17 @@
-from abc import ABC, abstractstaticmethod
+from abc import ABC
 import re
 
 
 class AbstractErrorHandler(ABC):
+    def __init__(self):
+        self.lines = None
+        self.report = []
+
     @property
     def error_code(self) -> int:
         ...
 
-    @property.getter
+    @error_code.getter
     def error_code(self) -> int:
         ...
 
@@ -15,7 +19,7 @@ class AbstractErrorHandler(ABC):
     def pattern(self) -> str:
         ...
 
-    @property.getter
+    @pattern.getter
     def pattern(self) -> str:
         ...
 
@@ -23,7 +27,7 @@ class AbstractErrorHandler(ABC):
     def exception(self) -> str:
         ...
 
-    @property.getter
+    @exception.getter
     def exception(self) -> str:
         ...
 
@@ -31,13 +35,19 @@ class AbstractErrorHandler(ABC):
     def msg(self) -> str:
         ...
 
-    @property.getter
+    @msg.getter
     def msg(self) -> str:
         ...
 
-    def check(self, line: str) -> bool:
-        exception = re.search(self.exception, line)
-        if exception is not None:
-            return False
-        check = re.search(self.pattern, line)
-        return False if check is None else True
+    def check(self) -> None:
+        lines = self.lines
+        line_number = 0
+        for line in lines:
+            line_number = line_number + 1
+            if self.exception:
+                exception = re.search(self.exception, line)
+                if exception is not None:
+                    continue
+            check = re.search(self.pattern, line)
+            if check is None:
+                self.report.append(line_number)

@@ -9,12 +9,16 @@ def analyze_file(src_path):
     full_path = Path(src_path).absolute()
     with open(full_path) as read_file:
         lines = read_file.readlines()
-        line_number = 0
-        for line in lines:
-            line_number = line_number + 1
-            if EndOfLineError.check(line=line):
-                LoggingCustom.log_alert(line=line_number,msg=EndOfLineError.msg)
-    return lines
+        sub_class = AbstractErrorHandler.__subclasses__()
+        for cls in sub_class:
+            checker: AbstractErrorHandler = cls()
+            checker.lines = lines
+            checker.check()
+            if len(checker.report) > 0:
+                LoggingCustom.log_alert(
+                    lines=checker.report,
+                    msg=checker.msg
+                )
 
 
 class LoggingEventHandler(FileSystemEventHandler):
@@ -24,9 +28,9 @@ class LoggingEventHandler(FileSystemEventHandler):
         super(LoggingEventHandler, self).on_created(event)
 
         what = 'directory' if event.is_directory else 'file'
-        total_lines = analyze_file(src_path=event.src_path)
-        LoggingCustom.log_alert(line=123, msg="ABC")
-        logging.info("Created : %s", event.src_path)
+        LoggingCustom.log_info(level="Start", line=0, msg="Initial")
+        analyze_file(src_path=event.src_path)
+        LoggingCustom.log_info(level="End", line=0, msg="Terminate")
 
     def on_modified(self, event):
         super(LoggingEventHandler, self).on_modified(event)
